@@ -14,8 +14,15 @@
     <header>
     </header>
     <main>
-        <input type="text" class="text-input">
-        <button class="btn btn-primary add-btn">Добавить</button>
+        <form class="row g-2 needs-validation" novalidate>
+            <div class="col-md-4">
+                <input type="text" class="form-control text-input" required>
+                <div class="invalid-feedback">Введите непустую строку</div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary add-btn">Добавить</button>
+            </div>
+        </form>
         <ul class="list">
 
         </ul>
