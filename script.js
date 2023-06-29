@@ -1,77 +1,8 @@
-const textForm = document.querySelector(".text-form")
-const sortForm = document.querySelector(".sort-form")
+const textForm = document.querySelector(".text-form");
+const sortForm = document.querySelector(".sort-form");
 
 const list = new Array();
 let nextID = 0;
-
-document.addEventListener("click", function (e) {
-  let target = e.target.closest(".edit-btn");
-  if (target) {
-    const elementContainer = target.closest(".element-container");
-    const elementNode = target.closest("li");
-    const editForm = elementNode.querySelector(".edit-form");
-    const editInput = editForm.querySelector("input");
-
-    // Скрыть элемент и показать форму редактирования
-    elementContainer.hidden = true;
-    editForm.hidden = false;
-
-    // Меняем текст поля на текст элемента
-    editInput.value = getElementById(Number(elementNode.id)).text;
-  }
-
-  target = e.target.closest(".remove-btn");
-  if (target) {
-    const elementNode = target.closest("li");
-    removeElement(Number(elementNode.id));
-  }
-
-  target = e.target.closest(".confirm-btn");
-  if (target) {
-    e.preventDefault();
-
-    const elementNode = target.closest("li");
-    const elementContainer = elementNode.querySelector(".element-container");
-    const editForm = target.closest(".edit-form");
-    const editInput = editForm.querySelector("input");
-    const editValue = editInput.value.trim();
-
-    // Валидация отредактированного текста
-    if (!editValue) {
-      editInput.classList.add("is-invalid");
-      return;
-    }
-
-    // Скрыть форму редактирования и показать элемент
-    editForm.hidden = true;
-    elementContainer.hidden = false;
-
-    // Меняем текст
-    getElementById(Number(elementNode.id)).text = editValue;
-
-    // Убираем ошибку валидации, если она была
-    editInput.classList.remove("is-invalid");
-
-    sortList();
-  }
-
-  target = e.target.closest(".cancel-btn");
-  if (target) {
-    e.preventDefault();
-
-    const elementNode = target.closest("li");
-    const elementContainer = elementNode.querySelector(".element-container");
-    const editForm = target.closest(".edit-form");
-    const editInput = editForm.querySelector("input");
-
-    // Скрыть форму редактирования и показать элемент
-    editForm.hidden = true;
-    elementContainer.hidden = false;
-
-    // Убираем ошибку валидации, если она была
-    editInput.classList.remove("is-invalid");
-  }
-});
 
 textForm.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -95,6 +26,96 @@ textForm.addEventListener("submit", function (e) {
 });
 
 sortForm.addEventListener("change", sortList);
+
+document.addEventListener("click", function (e) {
+  let target = e.target.closest(".edit-btn");
+  if (target) {
+    onEditClick(target, e);
+    return;
+  }
+
+  target = e.target.closest(".remove-btn");
+  if (target) {
+    onRemoveClick(target, e);
+    return;
+  }
+
+  target = e.target.closest(".confirm-btn");
+  if (target) {
+    onConfirmClick(target, e);
+    return;
+  }
+
+  target = e.target.closest(".cancel-btn");
+  if (target) {
+    onCancelClick(target, e);
+    return;
+  }
+});
+
+
+function onEditClick(target, e) {
+  const elementContainer = target.closest(".element-container");
+  const elementNode = target.closest("li");
+  const editForm = elementNode.querySelector(".edit-form");
+  const editInput = editForm.querySelector("input");
+
+  // Скрыть элемент и показать форму редактирования
+  elementContainer.hidden = true;
+  editForm.hidden = false;
+
+  // Меняем текст поля на текст элемента
+  editInput.value = getElementById(Number(elementNode.id)).text;
+}
+
+function onConfirmClick(target, e) {
+  e.preventDefault();
+
+  const elementNode = target.closest("li");
+  const elementContainer = elementNode.querySelector(".element-container");
+  const editForm = target.closest(".edit-form");
+  const editInput = editForm.querySelector("input");
+  const editValue = editInput.value.trim();
+
+  // Валидация отредактированного текста
+  if (!editValue) {
+    editInput.classList.add("is-invalid");
+    return;
+  }
+
+  // Скрыть форму редактирования и показать элемент
+  editForm.hidden = true;
+  elementContainer.hidden = false;
+
+  // Меняем текст
+  getElementById(Number(elementNode.id)).text = editValue;
+
+  // Убираем ошибку валидации, если она была
+  editInput.classList.remove("is-invalid");
+
+  sortList();
+}
+
+function onCancelClick(target, e) {
+  e.preventDefault();
+
+  const elementNode = target.closest("li");
+  const elementContainer = elementNode.querySelector(".element-container");
+  const editForm = target.closest(".edit-form");
+  const editInput = editForm.querySelector("input");
+
+  // Скрыть форму редактирования и показать элемент
+  editForm.hidden = true;
+  elementContainer.hidden = false;
+
+  // Убираем ошибку валидации, если она была
+  editInput.classList.remove("is-invalid");
+}
+
+function onRemoveClick(target, e) {
+  const elementNode = target.closest("li");
+  removeElement(Number(elementNode.id));
+}
 
 function renderList() {
   const listNode = document.querySelector(".list");
@@ -128,7 +149,7 @@ function removeElement(id) {
 
 function createElementNode(element) {
   const elementNode = document.createElement("li");
-  
+
   elementNode.classList.add("list-group-item");
 
   elementNode.innerHTML = `
