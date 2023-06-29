@@ -10,14 +10,14 @@ document.addEventListener("click", function (e) {
     const elementContainer = target.closest(".element-container");
     const elementNode = target.closest("li");
     const editForm = elementNode.querySelector(".edit-form");
-    const input = editForm.querySelector("input");
+    const editInput = editForm.querySelector("input");
 
     // Скрыть элемент и показать форму редактирования
     elementContainer.hidden = true;
     editForm.hidden = false;
 
     // Меняем текст поля на текст элемента
-    input.value = getElementById(Number(elementNode.id)).text;
+    editInput.value = getElementById(Number(elementNode.id)).text;
   }
 
   target = e.target.closest(".remove-btn");
@@ -30,9 +30,9 @@ document.addEventListener("click", function (e) {
   if (target) {
     e.preventDefault();
 
+    const elementNode = target.closest("li");
+    const elementContainer = elementNode.querySelector(".element-container");
     const editForm = target.closest(".edit-form");
-    const elementNode = editForm.closest("li")
-    const elementContainer = elementNode.querySelector(".element-container");;
     const editInput = editForm.querySelector("input");
     const editValue = editInput.value.trim();
 
@@ -59,10 +59,10 @@ document.addEventListener("click", function (e) {
   if (target) {
     e.preventDefault();
 
+    const elementNode = target.closest("li");
+    const elementContainer = elementNode.querySelector(".element-container");
     const editForm = target.closest(".edit-form");
     const editInput = editForm.querySelector("input");
-    const elementNode = editForm.closest("li")
-    const elementContainer = elementNode.querySelector(".element-container");;
 
     // Скрыть форму редактирования и показать элемент
     editForm.hidden = true;
@@ -127,19 +127,26 @@ function removeElement(id) {
 }
 
 function createElementNode(element) {
-  const elementContainer = createElementContainer(element.text);
-
-  const editForm = createEditForm();
-  editForm.hidden = true;
-  const elementID = createElementID(element.id);
-
   const elementNode = document.createElement("li");
-
+  
   elementNode.classList.add("list-group-item");
 
-  elementNode.appendChild(elementID);
-  elementNode.appendChild(elementContainer);
-  elementNode.appendChild(editForm);
+  elementNode.innerHTML = `
+  <div class="element-id">${element.id}</div>
+  <div class="element-container">
+    <p>${element.text}</p>
+    <hr>
+    <button class="btn btn-secondary edit-btn">Редактировать</button>
+    <button class="btn-close remove-btn"></button>
+  </div>
+  <form class="edit-form" hidden>
+    <input class="form-control edit-input" type="text">
+    <div class="invalid-feedback">Введите непустую строку</div>
+    <hr>
+    <button class="btn btn-success confirm-btn" type="submit">Ок</button>
+    <button class="btn btn-danger cancel-btn">Отмена</button>
+  </form>
+  `;
 
   elementNode.id = element.id;
 
@@ -148,93 +155,6 @@ function createElementNode(element) {
 
 function getNewID() {
   return nextID++;
-}
-
-function createElementID(id) {
-  const elementID = document.createElement("div");
-  elementID.classList.add("element-id");
-  elementID.innerText = id;
-
-  return elementID;
-}
-
-function createEditForm() {
-  const editForm = document.createElement("form");
-  editForm.classList.add("edit-form");
-
-  const input = document.createElement("input");
-  input.classList.add("form-control", "edit-input");
-  input.type = "text";
-
-  const invalidFeedback = document.createElement("div");
-  const invalidFeedbackText = document.createTextNode("Введите непустую строку");
-  invalidFeedback.classList.add("invalid-feedback");
-  invalidFeedback.appendChild(invalidFeedbackText);
-
-  const cancelButton = createCancelButton();
-  const confirmButton = createConfirmButton();
-
-  editForm.appendChild(input);
-  editForm.appendChild(invalidFeedback);
-  editForm.appendChild(document.createElement("hr"));
-  editForm.appendChild(confirmButton);
-  editForm.appendChild(cancelButton);
-
-  return editForm;
-}
-
-function createCancelButton() {
-  const cancelButton = document.createElement("button");
-  const cancelButtonText = document.createTextNode("Отмена");
-
-  cancelButton.classList.add("btn", "btn-danger", "cancel-btn");
-  cancelButton.appendChild(cancelButtonText);
-
-  return cancelButton;
-}
-
-function createConfirmButton() {
-  const confirmButton = document.createElement("button");
-  const confirmButtonText = document.createTextNode("Ок");
-
-  confirmButton.classList.add("btn", "btn-success", "confirm-btn");
-  confirmButton.type = "submit";
-  confirmButton.appendChild(confirmButtonText);
-
-  return confirmButton;
-}
-
-function createElementContainer(text) {
-  const elementContainer = document.createElement("div");
-  const content = document.createTextNode(text);
-  const p = document.createElement("p");
-  p.appendChild(content);
-
-  elementContainer.classList.add("element-container");
-
-  elementContainer.appendChild(p);
-  elementContainer.appendChild(document.createElement("hr"));
-  elementContainer.appendChild(createEditButton());
-  elementContainer.appendChild(createRemoveButton());
-
-  return elementContainer;
-}
-
-function createRemoveButton() {
-  const closeButton = document.createElement("button");
-  closeButton.classList.add("btn-close", "remove-btn");
-
-  return closeButton;
-}
-
-function createEditButton() {
-  const editButton = document.createElement("button");
-  const editButtonText = document.createTextNode("Редактировать");
-
-  editButton.classList.add("btn", "btn-secondary", "edit-btn")
-  editButton.appendChild(editButtonText);
-
-  return editButton;
 }
 
 function getSelectedSort() {
