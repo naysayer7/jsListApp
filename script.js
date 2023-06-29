@@ -7,7 +7,7 @@ form.addEventListener("submit", function (event) {
   const list = document.querySelector(".list");
   const inputValue = textInput.value.trim();
 
-  // Очищаем полу ввода
+  // Очищаем поле ввода
   textInput.value = "";
 
   // Валидация текста
@@ -52,7 +52,6 @@ function createEditForm() {
   invalidFeedback.classList.add("invalid-feedback");
   invalidFeedback.appendChild(invalidFeedbackText);
 
-
   const cancelButton = createCancelButton();
   const confirmButton = createConfirmButton();
 
@@ -75,12 +74,16 @@ function createCancelButton() {
   cancelButton.addEventListener("click", function (event) {
     event.preventDefault();
 
-    const editControls = this.parentElement;
-    const element = editControls.parentElement.querySelector(".element-container");
+    const editForm = this.parentElement;
+    const editInput = editForm.querySelector("input");
+    const element = editForm.parentElement.querySelector(".element-container");
 
     // Скрыть форму редактирования и показать элемент
-    editControls.hidden = true;
+    editForm.hidden = true;
     element.hidden = false;
+
+    // Убираем ошибку валидации, если она была
+    editInput.classList.remove("is-invalid");
   });
 
   return cancelButton;
@@ -93,7 +96,6 @@ function createConfirmButton() {
   confirmButton.classList.add("btn", "btn-success", "confirm-btn");
   confirmButton.type = "submit";
   confirmButton.appendChild(confirmButtonText);
-
 
   confirmButton.addEventListener("click", function (event) {
     event.preventDefault();
@@ -115,6 +117,9 @@ function createConfirmButton() {
 
     // Меняем текст
     element.firstChild.textContent = editValue;
+
+    // Убираем ошибку валидации, если она была
+    editInput.classList.remove("is-invalid");
   });
 
   return confirmButton;
