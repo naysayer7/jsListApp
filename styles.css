@@ -15,3 +15,7 @@ body {
 .edit-input {
     width: 100%;
 }
+
+.element-id {
+    text-align: end;
+}

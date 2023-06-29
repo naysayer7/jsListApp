@@ -14,7 +14,33 @@
     <header>
     </header>
     <main>
-        <form class="row g-2 needs-validation" novalidate>
+        <form class="p-5 sort-form">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sortRadio" id="incNumRadio">
+                <label class="form-check-label" for="incNumRadio">
+                    по возрастанию номера
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sortRadio" id="decNumRadio" checked>
+                <label class="form-check-label" for="decNumRadio">
+                    по убыванию номера
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sortRadio" id="alphabetRadio">
+                <label class="form-check-label" for="alphabetRadio">
+                    в алфавитном порядке
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sortRadio" id="invAlphabetRadio">
+                <label class="form-check-label" for="invAlphabetRadio">
+                    в обратном алфавитном порядке
+                </label>
+            </div>
+        </form>
+        <form class="row g-2 text-form" novalidate>
             <div class="col-md-4">
                 <input type="text" class="form-control text-input" required>
                 <div class="invalid-feedback">Введите непустую строку</div>
@@ -24,7 +50,7 @@
             </div>
         </form>
         <ul class="list list-group">
-            
+
         </ul>
     </main>
     <footer>

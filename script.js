@@ -1,10 +1,10 @@
-const form = document.querySelector(".needs-validation")
+const textForm = document.querySelector(".text-form")
+const sortForm = document.querySelector(".sort-form")
 
-form.addEventListener("submit", function (event) {
+textForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
   const textInput = this.querySelector(".text-input");
-  const list = document.querySelector(".list");
   const inputValue = textInput.value.trim();
 
   // Очищаем поле ввода
@@ -16,27 +16,64 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
-  list.appendChild(createElement(inputValue));
+  addElement(inputValue);
 
   // Убираем ошибку валидации, если она была
   textInput.classList.remove("is-invalid");
 });
 
+sortForm.addEventListener("change", function () {
+  sortList();
+})
+
+function addElement(text) {
+  const list = document.querySelector(".list");
+
+  list.appendChild(createElement(text));
+
+  sortList();
+}
+
 function createElement(text) {
-  const elementContainer = createElementContainer();
-  elementContainer.querySelector("p").textContent = text;
+  const elementContainer = createElementContainer(text);
 
   const editForm = createEditForm();
   editForm.hidden = true;
+  const elementID = createElementID(getFreeID());
 
   const element = document.createElement("li");
-  
+
   element.classList.add("list-group-item");
 
+  element.appendChild(elementID);
   element.appendChild(elementContainer);
   element.appendChild(editForm);
 
   return element;
+}
+
+function getFreeID() {
+  const list = document.querySelector(".list");
+  const elements = list.querySelectorAll("li");
+  let lastID = -1;
+
+  // Ищем максимальный ID среди элементов
+  elements.forEach(function (element) {
+    const elementID = Number(element.querySelector(".element-id").textContent);
+    if (lastID < elementID) {
+      lastID = elementID;
+    }
+  });
+
+  return lastID + 1;
+}
+
+function createElementID(id) {
+  const elementID = document.createElement("div");
+  elementID.classList.add("element-id");
+  elementID.innerText = id;
+
+  return elementID;
 }
 
 function createEditForm() {
@@ -120,14 +157,16 @@ function createConfirmButton() {
 
     // Убираем ошибку валидации, если она была
     editInput.classList.remove("is-invalid");
+
+    sortList();
   });
 
   return confirmButton;
 }
 
-function createElementContainer() {
+function createElementContainer(text) {
   const elementContainer = document.createElement("div");
-  const content = document.createTextNode("");
+  const content = document.createTextNode(text);
   const p = document.createElement("p");
   p.appendChild(content);
 
@@ -171,4 +210,71 @@ function createEditButton() {
   });
 
   return editButton;
+}
+
+function getSelectedSort() {
+  const form = document.querySelector(".sort-form");
+  const radios = form.querySelectorAll("input");
+
+  // Находим выбранную сортировку
+  let selectedSort;
+  for (const radio of radios) {
+    if (radio.checked) {
+      selectedSort = radio.id;
+      break;
+    }
+  }
+
+  return selectedSort;
+}
+
+function sortList() {
+  const list = document.querySelector(".list");
+  const elements = list.querySelectorAll("li");
+
+  const selectedSort = getSelectedSort();
+
+  let compareFunction;
+  switch (selectedSort) {
+    case "incNumRadio":
+      compareFunction = sortIncNum;
+      break;
+    case "decNumRadio":
+      compareFunction = sortDecNum;
+      break;
+    case "alphabetRadio":
+      compareFunction = sortAlphabet;
+      break;
+    case "invAlphabetRadio":
+      compareFunction = sortInvAlphabet;
+      break;
+    default:
+      break;
+  }
+
+  const sortedElements = [].slice.call(elements).sort(compareFunction);
+
+  for (const element of sortedElements) {
+    list.appendChild(element);
+  }
+}
+
+function sortDecNum(a, b) {
+  return !sortIncNum(a, b);
+}
+
+function sortIncNum(a, b) {
+  const aID = Number(a.querySelector(".element-id").textContent);
+  const bID = Number(b.querySelector(".element-id").textContent);
+  return aID > bID;
+}
+
+function sortInvAlphabet(a, b) {
+  return !sortAlphabet(a, b);
+}
+
+function sortAlphabet(a, b) {
+  const aID = a.querySelector("p").textContent;
+  const bID = b.querySelector("p").textContent;
+  return aID > bID;
 }
