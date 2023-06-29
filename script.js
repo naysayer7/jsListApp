@@ -6,28 +6,38 @@ form.addEventListener("submit", function (event) {
   const textInput = this.querySelector(".text-input");
   const list = document.querySelector(".list");
   const inputValue = textInput.value.trim();
+
+  // Очищаем полу ввода
   textInput.value = "";
 
+  // Валидация текста
   if (!inputValue) {
     textInput.classList.add("is-invalid");
     return;
   }
 
-  const elementContainer = createElementContainer();
-  elementContainer.querySelector("p").textContent = inputValue;
-
-  const editForm = createEditForm();
-  editForm.hidden = true;
-
-  const newListElement = document.createElement("li");
-  newListElement.classList.add("list-group-item");
-  newListElement.appendChild(elementContainer);
-  newListElement.appendChild(editForm);
-  list.appendChild(newListElement);
+  list.appendChild(createElement(inputValue));
 
   // Убираем ошибку валидации, если она была
   textInput.classList.remove("is-invalid");
 });
+
+function createElement(text) {
+  const elementContainer = createElementContainer();
+  elementContainer.querySelector("p").textContent = text;
+
+  const editForm = createEditForm();
+  editForm.hidden = true;
+
+  const element = document.createElement("li");
+  
+  element.classList.add("list-group-item");
+
+  element.appendChild(elementContainer);
+  element.appendChild(editForm);
+
+  return element;
+}
 
 function createEditForm() {
   const editForm = document.createElement("form");
