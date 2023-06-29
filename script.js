@@ -1,6 +1,8 @@
 const textForm = document.querySelector(".text-form")
 const sortForm = document.querySelector(".sort-form")
 
+let nextID = 0;
+
 textForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
@@ -39,7 +41,8 @@ function createElement(text) {
 
   const editForm = createEditForm();
   editForm.hidden = true;
-  const elementID = createElementID(getFreeID());
+  const elementID = createElementID(getID());
+  
 
   const element = document.createElement("li");
 
@@ -52,20 +55,8 @@ function createElement(text) {
   return element;
 }
 
-function getFreeID() {
-  const list = document.querySelector(".list");
-  const elements = list.querySelectorAll("li");
-  let lastID = -1;
-
-  // Ищем максимальный ID среди элементов
-  elements.forEach(function (element) {
-    const elementID = Number(element.querySelector(".element-id").textContent);
-    if (lastID < elementID) {
-      lastID = elementID;
-    }
-  });
-
-  return lastID + 1;
+function getID() {
+  return nextID++;
 }
 
 function createElementID(id) {
